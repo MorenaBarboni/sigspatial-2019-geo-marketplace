@@ -4,6 +4,7 @@ import edu.usc.infolab.kien.blockchaingeospatial.config.Config;
 import org.apache.commons.codec.binary.StringUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
+import org.apache.logging.log4j.core.util.SystemClock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.web3j.abi.datatypes.generated.Bytes32;
@@ -28,8 +29,11 @@ import java.util.Collections;
 public class EthHelper {
     private static final Logger logger = LoggerFactory.getLogger(EthHelper.class);
 
-    private static final String FUNDING_ACCOUNT_ADDRESS = "0x6a628798abeb39cf04505a0d27c632616743dd2d";
-    private static final String CURATOR_ACCOUNT_ADDERSS = "0xcd4eb59e28a6701e74d06d52431d83cb4c8e0cb8";
+    private static final String FUNDING_ACCOUNT_ADDRESS = "0xd03ea8624C8C5987235048901fB614fDcA89b117";
+    private static final String CURATOR_ACCOUNT_ADDERSS = "0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0";
+    private static final String BUYER_ACCOUNT_ADDRESS = "0x22d491Bde2303f2f43325b2108D26f1eAbA1e32b";
+    private static final String BUYER2_ACCOUNT_ADDRESS = "0xE11BA2b4D45Eaed5996Cd0823791E0C93114882d";
+    private static final String OWNER_ACCOUNT_ADDRESS = "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1";
 
     private static ArrayList<Credentials> allCredentials = new ArrayList<>();
     private static ArrayList<Credentials> ownerAccounts = new ArrayList<>();
@@ -90,27 +94,19 @@ public class EthHelper {
 
         try {
             allCredentials = new ArrayList<>();
+            Credentials credentialsFunding = Credentials.create("0x4f3edf983ac636a65a842ce7c78d9aa706d3b113bce9c46f30d7d21715b23b1d");
+            Credentials credentialsCurator = Credentials.create("0x6cbed15c793ce57650b9877cf6fa156fbef513c4e6134f022a85b1ffdd59b2a1");
+            Credentials credentialsBuyer = Credentials.create("0x6370fd033278c143179d81c5526140625662b8daa446c22ee2d73db3707e620c");
+            Credentials credentialsBuyer2 = Credentials.create("0x646f1ce2fdad0e6deeeb5c7e8e5543bdde65e86029e2fd9fc169899c440a7913");
+            Credentials credentialsOwner = Credentials.create("0xadd53f9a7e588d003326d1cbf9e4a43c061aadd9bc938c843a79e7b4fd2ad743");
 
-            ArrayList<File> keyFiles = new ArrayList<>(
-                FileUtils.listFiles(
-                    new File(Config.getWalletDir()),
-                    new WildcardFileFilter("UTC*"),
-                    null));
-            Collections.sort(keyFiles);
-//            logger.info(keyFiles.toString());
+            //Load funding credentials
+            fundingAccount = credentialsFunding;
+            allCredentials.add(fundingAccount);
 
-            for (File file : keyFiles) {
-                Credentials credentials = WalletUtils.loadCredentials(Config.getWalletPassword(), file.getAbsolutePath());
-                allCredentials.add(credentials);
-
-                if (credentials.getAddress().equals(FUNDING_ACCOUNT_ADDRESS)) {
-                    fundingAccount = credentials;
-                }
-
-                if (credentials.getAddress().equals(CURATOR_ACCOUNT_ADDERSS)) {
-                    curatorAccount = credentials;
-                }
-            }
+            //Load curator credentials
+            curatorAccount = credentialsCurator;
+            allCredentials.add(curatorAccount);
 
             if (fundingAccount == null) {
                 logger.error("Unable to find funding account");
@@ -124,23 +120,14 @@ public class EthHelper {
                 logger.info("Curator account address: " + curatorAccount.getAddress());
             }
 
-            //Divide other accounts to owners and buyers
-            // num onwer = half of (num all account - funding - curator)
-            int numOwner = (allCredentials.size() - 2) / 2;
-            for (int i = 0; i < allCredentials.size(); i++) {
-                Credentials credentials = allCredentials.get(i);
-                if (credentials.getAddress().equals(FUNDING_ACCOUNT_ADDRESS)
-                    || credentials.getAddress().equals(CURATOR_ACCOUNT_ADDERSS)) {
-                    continue;
-                }
+            //Load owners and buyers
+            ownerAccounts.add(credentialsOwner);
+            buyerAccounts.add(credentialsBuyer);
+            buyerAccounts.add(credentialsBuyer2);
+            allCredentials.add(credentialsOwner);
+            allCredentials.add(credentialsBuyer);
+            allCredentials.add(credentialsBuyer2);
 
-                // not funding or curator account
-                if (ownerAccounts.size() < numOwner) {
-                    ownerAccounts.add(credentials);
-                } else {
-                    buyerAccounts.add(credentials);
-                }
-            }
 
             logger.info("There are " + ownerAccounts.size() + " owner accounts");
             logger.info("There are " + buyerAccounts.size() + " buyer accounts");
