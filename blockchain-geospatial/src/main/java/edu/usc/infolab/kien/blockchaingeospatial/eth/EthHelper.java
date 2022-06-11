@@ -29,11 +29,11 @@ import java.util.Collections;
 public class EthHelper {
     private static final Logger logger = LoggerFactory.getLogger(EthHelper.class);
 
+    private static final String OWNER_ACCOUNT_ADDRESS = "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1";
     private static final String FUNDING_ACCOUNT_ADDRESS = "0xd03ea8624C8C5987235048901fB614fDcA89b117";
     private static final String CURATOR_ACCOUNT_ADDERSS = "0xFFcf8FDEE72ac11b5c542428B35EEF5769C409f0";
     private static final String BUYER_ACCOUNT_ADDRESS = "0x22d491Bde2303f2f43325b2108D26f1eAbA1e32b";
     private static final String BUYER2_ACCOUNT_ADDRESS = "0xE11BA2b4D45Eaed5996Cd0823791E0C93114882d";
-    private static final String OWNER_ACCOUNT_ADDRESS = "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1";
 
     private static ArrayList<Credentials> allCredentials = new ArrayList<>();
     private static ArrayList<Credentials> ownerAccounts = new ArrayList<>();
