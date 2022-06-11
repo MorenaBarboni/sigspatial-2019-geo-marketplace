@@ -8,7 +8,7 @@ public class Constants {
     public static final String COMMITMENT = "asasdjkfhasjkdfhaslkdfhaksdjfhajskdfhaslkjdfhasdlflwieriweyruiwe";
 
 //    public static final String INDEX_ADDRESS = "7f5fd7b9d0037d6b196b4f438ff3112214ca6746a39673f46822e9ff4c162df1";
-    public static final String INDEX_ADDRESS = "6b1c64c2e7c03cf33f9eb3ba10a6d6ccb95cca3cb8277bca2f6ac310ada8ba20";
+    public static final String INDEX_ADDRESS = "6b1c64c2e7c03cf33f9eb3ba10a6d6cc";
     public static final long START_TIME = 1539800045;
     public static final long END_TIME = 1539886446;
 
